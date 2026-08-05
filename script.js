@@ -55,13 +55,23 @@ const groupLeads = {
   ]
 };
 
-heroStage?.addEventListener('mousemove', (event) => {
-  const rect = heroStage.getBoundingClientRect();
-  const x = `${event.clientX - rect.left}px`;
-  const y = `${event.clientY - rect.top}px`;
+// Coalesce pointer updates to one write per frame. Each write re-rasterizes a
+// full-viewport gradient mask, and reading the rect inside the frame keeps the
+// listener itself off the layout path.
+let heroPointer = null;
+let heroFrame = 0;
 
-  heroCurtain.style.setProperty('--mx', x);
-  heroCurtain.style.setProperty('--my', y);
+heroStage?.addEventListener('mousemove', (event) => {
+  heroPointer = { x: event.clientX, y: event.clientY };
+
+  if (heroFrame) return;
+
+  heroFrame = requestAnimationFrame(() => {
+    heroFrame = 0;
+    const rect = heroStage.getBoundingClientRect();
+    heroCurtain.style.setProperty('--mx', `${heroPointer.x - rect.left}px`);
+    heroCurtain.style.setProperty('--my', `${heroPointer.y - rect.top}px`);
+  });
 });
 
 document.querySelectorAll('[data-quick-action]').forEach((button) => {

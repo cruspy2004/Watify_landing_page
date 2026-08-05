@@ -143,10 +143,21 @@ button {
   box-shadow: none;
 }
 
+/* Registered so the spotlight radius can actually be transitioned.
+   Gradient mask-images are not interpolatable; a <length> custom property is. */
+@property --spot {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
 .hero-section {
   position: relative;
-  min-height: calc(100vh - 4.7rem);
-  padding-top: 4.7rem;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  min-height: 100svh;
+  padding: clamp(7.5rem, 13vh, 10rem) clamp(1.5rem, 6vw, 6rem) clamp(5rem, 9vh, 7rem);
   overflow: hidden;
   background:
     radial-gradient(circle at 70% 12%, rgba(191, 240, 207, 0.34), transparent 22rem),
@@ -170,22 +181,20 @@ button {
 .hero-curtain {
   --mx: 50%;
   --my: 50%;
+  --spot: 0px;
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
-  padding: clamp(2rem, 7vw, 6rem);
+  z-index: 2;
   background:
     radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.18), transparent 11rem),
     linear-gradient(135deg, rgba(15, 122, 69, 0.98), rgba(6, 61, 39, 0.98) 52%, rgba(3, 31, 21, 0.98));
-  -webkit-mask-image: radial-gradient(circle 0 at var(--mx) var(--my), transparent 0, #000 0);
-  mask-image: radial-gradient(circle 0 at var(--mx) var(--my), transparent 0, #000 0);
-  transition: -webkit-mask-image 240ms ease, mask-image 240ms ease;
+  -webkit-mask-image: radial-gradient(circle var(--spot) at var(--mx) var(--my), transparent 0 42%, rgba(0, 0, 0, 0.28) 55%, #000 73%);
+  mask-image: radial-gradient(circle var(--spot) at var(--mx) var(--my), transparent 0 42%, rgba(0, 0, 0, 0.28) 55%, #000 73%);
+  transition: --spot 300ms ease;
 }
 
 .hero-section:hover .hero-curtain {
-  -webkit-mask-image: radial-gradient(circle 210px at var(--mx) var(--my), transparent 0 42%, rgba(0, 0, 0, 0.28) 55%, #000 73%);
-  mask-image: radial-gradient(circle 210px at var(--mx) var(--my), transparent 0 42%, rgba(0, 0, 0, 0.28) 55%, #000 73%);
+  --spot: clamp(200px, 24vw, 360px);
 }
 
 .hero-curtain::after {
@@ -206,17 +215,107 @@ h4 {
   letter-spacing: -0.055em;
 }
 
-h1 {
+.hero-copy {
   position: relative;
-  z-index: 2;
-  max-width: 9ch;
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  width: min(100%, 68rem);
+  text-align: center;
+}
+
+.hero-eyebrow {
+  margin: 0 0 1.25rem;
+  padding: 0.5rem 1.05rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--green-200);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+h1 {
+  margin: 0 0 1.5rem;
   color: #fff;
   font-family: "BDA Grotesk", "Space Grotesk", sans-serif;
-  font-size: clamp(5.4rem, 14vw, 15rem);
+  font-size: clamp(3rem, 12vw, 15rem);
   font-weight: 800;
-  line-height: 0.74;
-  text-align: center;
+  /* 0.74 collided badly. Measured ink extents for this face need a baseline
+     gap of 0.92em for descenders to clear the next line's ascenders; 0.94
+     leaves a small buffer so it holds at any wrap. */
+  line-height: 0.94;
   text-transform: lowercase;
+  text-wrap: balance;
+}
+
+.hero-sub {
+  max-width: 42rem;
+  margin: 0 0 2.25rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(1rem, 1.5vw, 1.22rem);
+  line-height: 1.6;
+}
+
+.hero-actions {
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.primary-button,
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3.15rem;
+  padding: 0 1.7rem;
+  text-decoration: none;
+}
+
+.ghost-button {
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-weight: 900;
+  backdrop-filter: blur(10px);
+}
+
+.ghost-button:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.hero-scroll-cue {
+  position: absolute;
+  bottom: clamp(1.2rem, 3vh, 2.2rem);
+  left: 50%;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+}
+
+.hero-scroll-cue svg {
+  animation: heroCue 1.9s ease-in-out infinite;
+}
+
+@keyframes heroCue {
+  0%, 100% { transform: translateY(-2px); opacity: 0.6; }
+  50% { transform: translateY(3px); opacity: 1; }
 }
 
 h2 {
@@ -1017,11 +1116,28 @@ th {
   }
 
   .hero-section {
-    min-height: 48rem;
+    padding-top: 11rem;
   }
 
+  /* 24vw made "whatsapp" 405px wide inside a 390px viewport, so it was
+     clipped by the hero's overflow:hidden. 15vw fits with room to spare. */
   h1 {
-    font-size: clamp(5rem, 24vw, 9rem);
+    font-size: clamp(3rem, 15vw, 5rem);
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+  }
+
+  .hero-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primary-button,
+  .ghost-button {
+    justify-content: center;
   }
 
   .dashboard-underlay {
@@ -1044,5 +1160,41 @@ th {
   table {
     display: block;
     overflow-x: auto;
+  }
+}
+
+/* The spotlight reveal is hover-only, so on touch it left an opaque curtain
+   over a dashboard nobody could uncover. Show the dashboard behind a fixed
+   scrim instead. */
+@media (hover: none) {
+  .hero-curtain {
+    -webkit-mask-image: none;
+    mask-image: none;
+    background: linear-gradient(180deg,
+        rgba(3, 31, 21, 0.52) 0%,
+        rgba(3, 31, 21, 0.84) 55%,
+        rgba(3, 31, 21, 0.94) 100%);
+  }
+
+  .hero-section:hover .hero-curtain {
+    --spot: 0px;
+  }
+
+  .dashboard-underlay {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-curtain {
+    transition: none;
+  }
+
+  .hero-scroll-cue svg {
+    animation: none;
   }
 }
