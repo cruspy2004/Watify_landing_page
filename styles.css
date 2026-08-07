@@ -220,6 +220,12 @@ button {
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.36);
   opacity: 0.3;
   transform: perspective(1200px) rotateX(5deg) rotateY(-4deg) translateY(2rem) scale(0.96);
+  transition: opacity 300ms ease;
+}
+
+/* Hovering lifts the whole dashboard rather than cutting a hole to it. */
+.hero-section:hover .dashboard-underlay {
+  opacity: 0.55;
 }
 
 .hero-curtain {
@@ -232,8 +238,11 @@ button {
   background:
     radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.18), transparent 11rem),
     linear-gradient(135deg, rgba(15, 122, 69, 0.98), rgba(6, 61, 39, 0.98) 52%, rgba(3, 31, 21, 0.98));
-  -webkit-mask-image: radial-gradient(circle var(--spot) at var(--mx) var(--my), transparent 0 42%, rgba(0, 0, 0, 0.28) 55%, #000 73%);
-  mask-image: radial-gradient(circle var(--spot) at var(--mx) var(--my), transparent 0 42%, rgba(0, 0, 0, 0.28) 55%, #000 73%);
+  /* The spotlight thins the curtain instead of cutting through it: alpha 0.42
+     at the centre rather than 0, so the dashboard reads as fading up under a
+     softer layer rather than being punched out. */
+  -webkit-mask-image: radial-gradient(circle var(--spot) at var(--mx) var(--my), rgba(0, 0, 0, 0.42) 0 40%, rgba(0, 0, 0, 0.72) 60%, #000 80%);
+  mask-image: radial-gradient(circle var(--spot) at var(--mx) var(--my), rgba(0, 0, 0, 0.42) 0 40%, rgba(0, 0, 0, 0.72) 60%, #000 80%);
   transition: --spot 300ms ease;
 }
 
@@ -1389,7 +1398,9 @@ th {
     --spot: 0px;
   }
 
-  .dashboard-underlay {
+  /* No hover to lift it, so settle on the mid-point straight away. */
+  .dashboard-underlay,
+  .hero-section:hover .dashboard-underlay {
     opacity: 0.5;
   }
 }
@@ -1399,7 +1410,8 @@ th {
     scroll-behavior: auto;
   }
 
-  .hero-curtain {
+  .hero-curtain,
+  .dashboard-underlay {
     transition: none;
   }
 
