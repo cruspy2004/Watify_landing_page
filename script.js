@@ -14,18 +14,11 @@ const phoneScanStatus = document.querySelector('#phoneScanStatus');
 const groupResult = document.querySelector('#groupResult');
 const tableResult = document.querySelector('#tableResult');
 const messageResult = document.querySelector('#messageResult');
+const messageMeta = document.querySelector('#messageMeta');
 const groupTableBody = document.querySelector('#groupTableBody');
 const groupSearchInput = document.querySelector('#groupSearchInput');
 const leadPanel = document.querySelector('#leadPanel');
 const leadList = document.querySelector('#leadList');
-const quickActionOutput = document.querySelector('#quickActionOutput');
-
-const quickMessages = {
-  connect: 'WhatsApp verified. The admin can safely continue.',
-  group: 'Group created. Members are ready for review.',
-  send: 'Message sent. The result is tracked in the dashboard.',
-  track: 'Metrics updated. Admin work is now visible.'
-};
 
 const groupLeads = {
   'June Leads': [
@@ -71,12 +64,6 @@ heroStage?.addEventListener('mousemove', (event) => {
     const rect = heroStage.getBoundingClientRect();
     heroCurtain.style.setProperty('--mx', `${heroPointer.x - rect.left}px`);
     heroCurtain.style.setProperty('--my', `${heroPointer.y - rect.top}px`);
-  });
-});
-
-document.querySelectorAll('[data-quick-action]').forEach((button) => {
-  button.addEventListener('click', () => {
-    quickActionOutput.textContent = quickMessages[button.dataset.quickAction] || 'Action completed.';
   });
 });
 
@@ -133,6 +120,22 @@ phoneScanMock?.addEventListener('keydown', (e) => {
     e.preventDefault();
     triggerConnect();
   }
+});
+
+const composeTabs = document.querySelectorAll('[data-compose-tab]');
+
+composeTabs.forEach((tab) => {
+  tab.addEventListener('click', () => {
+    composeTabs.forEach((other) => {
+      const selected = other === tab;
+      other.classList.toggle('active', selected);
+      other.setAttribute('aria-pressed', String(selected));
+    });
+
+    if (messageMeta) {
+      messageMeta.textContent = `${tab.textContent.trim()} message selected`;
+    }
+  });
 });
 
 document.querySelectorAll('[data-row-action]').forEach((button) => {
