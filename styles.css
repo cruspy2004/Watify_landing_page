@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&display=swap");
+/* Fonts are loaded via <link> in the document head, not @import. An @import
+   here serialises HTML -> styles.css -> fonts.googleapis CSS -> font files. */
 
 ::selection {
   background: var(--green-200);
@@ -20,6 +21,17 @@
   --line: #dfe9e2;
   --shadow: 0 26px 70px rgba(4, 45, 28, 0.18);
   --soft-shadow: 0 18px 46px rgba(4, 45, 28, 0.1);
+
+  /* Layout: every section maps onto one of these two widths so content edges
+     line up down the page instead of each block picking its own measure. */
+  --container: 68rem;
+  --container-text: 52rem;
+  --container-narrow: 44rem;
+  --gutter: clamp(1.5rem, 6vw, 6rem);
+  --section-gap: clamp(4rem, 8vw, 8rem);
+
+  /* One eyebrow size, shared by .eyebrow and .hero-eyebrow. */
+  --eyebrow-size: 0.78rem;
 }
 
 * {
@@ -49,6 +61,37 @@ button {
   cursor: pointer;
 }
 
+/* Visible keyboard focus. Previously nothing on the page defined a focus
+   style and inputs set outline:none, so keyboard users had no indication
+   of position at all. */
+:focus-visible {
+  outline: 3px solid var(--green-500);
+  outline-offset: 3px;
+}
+
+/* A green ring on the dark green sections is too low contrast, so those
+   switch to white. */
+.site-header :focus-visible,
+.hero-section :focus-visible,
+.problem-statement :focus-visible,
+.cta-section :focus-visible,
+.site-footer :focus-visible {
+  outline-color: #fff;
+}
+
+/* Screen-reader-only text that stays reachable by assistive tech. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .site-header {
   position: absolute;
   top: 0;
@@ -71,14 +114,14 @@ button {
 .mock-user,
 .panel-header,
 .form-row,
-.send-footer,
-.one-click-console {
+.send-footer {
   display: flex;
   align-items: center;
 }
 
 .brand {
   gap: 0.7rem;
+  min-height: 2.75rem;
   color: #fff;
   text-decoration: none;
   text-transform: uppercase;
@@ -92,19 +135,22 @@ button {
   display: block;
 }
 
-.brand-mark {
-  display: grid;
-  width: 2.5rem;
-  height: 2.5rem;
-  place-items: center;
-  border-radius: 50%;
-  background: #fff;
-  color: var(--green-800);
-  font-weight: 900;
+.nav-links {
+  gap: clamp(0.2rem, 1.4vw, 1rem);
 }
 
-.nav-links {
-  gap: clamp(0.7rem, 2vw, 1.7rem);
+/* Nav links were 21px tall; padding brings them to a 44px touch target
+   without changing the visual rhythm much. */
+.nav-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 999px;
+}
+
+.nav-links a:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .nav-links a,
@@ -119,8 +165,7 @@ button {
 .ghost-button,
 .panel-button,
 .table-interface button,
-.compose-tabs button,
-.one-click-console button {
+.compose-tabs button {
   border: 0;
   border-radius: 999px;
   transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
@@ -128,8 +173,7 @@ button {
 
 .header-cta,
 .primary-button,
-.panel-button,
-.one-click-console button {
+.panel-button {
   background: #fff;
   color: var(--green-900);
   box-shadow: 0 16px 34px rgba(3, 31, 21, 0.22);
@@ -143,10 +187,21 @@ button {
   box-shadow: none;
 }
 
+/* Registered so the spotlight radius can actually be transitioned.
+   Gradient mask-images are not interpolatable; a <length> custom property is. */
+@property --spot {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
 .hero-section {
   position: relative;
-  min-height: calc(100vh - 4.7rem);
-  padding-top: 4.7rem;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  min-height: 100svh;
+  padding: clamp(7.5rem, 13vh, 10rem) clamp(1.5rem, 6vw, 6rem) clamp(5rem, 9vh, 7rem);
   overflow: hidden;
   background:
     radial-gradient(circle at 70% 12%, rgba(191, 240, 207, 0.34), transparent 22rem),
@@ -165,27 +220,34 @@ button {
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.36);
   opacity: 0.3;
   transform: perspective(1200px) rotateX(5deg) rotateY(-4deg) translateY(2rem) scale(0.96);
+  transition: opacity 300ms ease;
+}
+
+/* Hovering lifts the whole dashboard rather than cutting a hole to it. */
+.hero-section:hover .dashboard-underlay {
+  opacity: 0.55;
 }
 
 .hero-curtain {
   --mx: 50%;
   --my: 50%;
+  --spot: 0px;
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
-  padding: clamp(2rem, 7vw, 6rem);
+  z-index: 2;
   background:
     radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.18), transparent 11rem),
     linear-gradient(135deg, rgba(15, 122, 69, 0.98), rgba(6, 61, 39, 0.98) 52%, rgba(3, 31, 21, 0.98));
-  -webkit-mask-image: radial-gradient(circle 0 at var(--mx) var(--my), transparent 0, #000 0);
-  mask-image: radial-gradient(circle 0 at var(--mx) var(--my), transparent 0, #000 0);
-  transition: -webkit-mask-image 240ms ease, mask-image 240ms ease;
+  /* The spotlight thins the curtain instead of cutting through it: alpha 0.42
+     at the centre rather than 0, so the dashboard reads as fading up under a
+     softer layer rather than being punched out. */
+  -webkit-mask-image: radial-gradient(circle var(--spot) at var(--mx) var(--my), rgba(0, 0, 0, 0.42) 0 40%, rgba(0, 0, 0, 0.72) 60%, #000 80%);
+  mask-image: radial-gradient(circle var(--spot) at var(--mx) var(--my), rgba(0, 0, 0, 0.42) 0 40%, rgba(0, 0, 0, 0.72) 60%, #000 80%);
+  transition: --spot 300ms ease;
 }
 
 .hero-section:hover .hero-curtain {
-  -webkit-mask-image: radial-gradient(circle 210px at var(--mx) var(--my), transparent 0 42%, rgba(0, 0, 0, 0.28) 55%, #000 73%);
-  mask-image: radial-gradient(circle 210px at var(--mx) var(--my), transparent 0 42%, rgba(0, 0, 0, 0.28) 55%, #000 73%);
+  --spot: clamp(200px, 24vw, 360px);
 }
 
 .hero-curtain::after {
@@ -206,32 +268,129 @@ h4 {
   letter-spacing: -0.055em;
 }
 
-h1 {
+.hero-copy {
   position: relative;
-  z-index: 2;
-  max-width: 9ch;
-  color: #fff;
-  font-family: "BDA Grotesk", "Space Grotesk", sans-serif;
-  font-size: clamp(5.4rem, 14vw, 15rem);
-  font-weight: 800;
-  line-height: 0.74;
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  width: min(100%, var(--container));
   text-align: center;
-  text-transform: lowercase;
 }
 
+.hero-eyebrow {
+  margin: 0 0 1.25rem;
+  padding: 0.5rem 1.05rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--green-200);
+  font-size: var(--eyebrow-size);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+h1 {
+  margin: 0 0 1.5rem;
+  color: #fff;
+  /* "BDA Grotesk" was first in the stack but never loaded, so it always fell
+     through. Dropped rather than left as a phantom. */
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(3rem, 12vw, 15rem);
+  font-weight: 800;
+  /* 0.74 collided badly. Measured ink extents for this face need a baseline
+     gap of 0.92em for descenders to clear the next line's ascenders; 0.94
+     leaves a small buffer so it holds at any wrap. */
+  line-height: 0.94;
+  text-transform: lowercase;
+  text-wrap: balance;
+}
+
+.hero-sub {
+  max-width: var(--container-narrow);
+  margin: 0 0 2.25rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(1rem, 1.5vw, 1.22rem);
+  line-height: 1.6;
+}
+
+.hero-actions {
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.primary-button,
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3.15rem;
+  padding: 0 1.7rem;
+  text-decoration: none;
+}
+
+.ghost-button {
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-weight: 900;
+  backdrop-filter: blur(10px);
+}
+
+.ghost-button:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.hero-scroll-cue {
+  position: absolute;
+  min-height: 2.75rem;
+  bottom: clamp(1.2rem, 3vh, 2.2rem);
+  left: 50%;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+}
+
+.hero-scroll-cue svg {
+  animation: heroCue 1.9s ease-in-out infinite;
+}
+
+@keyframes heroCue {
+  0%, 100% { transform: translateY(-2px); opacity: 0.6; }
+  50% { transform: translateY(3px); opacity: 1; }
+}
+
+/* Same descender problem the h1 had: at 0.9 the ink of adjacent lines
+   overlapped by 1.7px on both multi-line h2s. 0.95 clears it. */
 h2 {
   font-size: clamp(2.5rem, 5.5vw, 6rem);
   font-weight: 800;
-  line-height: 0.9;
-}
-
-h3 {
-  font-size: clamp(1.7rem, 3.3vw, 3.4rem);
   line-height: 0.95;
 }
 
+/* 0.95 left only 0.1px clearance on the tightest h3; 0.98 gives a buffer. */
+h3 {
+  font-size: clamp(1.7rem, 3.3vw, 3.4rem);
+  line-height: 0.98;
+}
+
 h4 {
-  font-size: 1.35rem;
+  font-size: 1.5rem;
+  line-height: 1.2;
 }
 
 .mock-sidebar {
@@ -387,8 +546,35 @@ h4 {
 }
 
 .features-section,
-.how-section {
-  padding: clamp(4rem, 8vw, 8rem) clamp(1rem, 6vw, 6rem);
+.how-section,
+.problem-statement {
+  padding: var(--section-gap) var(--gutter);
+}
+
+/* The hook, moved up from the bottom of the page: problem before solution. */
+.problem-statement {
+  display: grid;
+  justify-items: start;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+
+.problem-statement > * {
+  width: min(100%, var(--container));
+  margin-inline: auto;
+}
+
+.problem-statement h2 {
+  max-width: 30ch;
+  color: var(--green-950);
+}
+
+.problem-lead {
+  max-width: var(--container-narrow);
+  margin: 1.5rem auto 0;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1.65;
 }
 
 .cta-section {
@@ -405,11 +591,23 @@ h4 {
 }
 
 .cta-content {
-  max-width: 56rem;
+  max-width: var(--container);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2.5rem;
+  gap: 1.5rem;
+}
+
+.cta-sub {
+  max-width: var(--container-narrow);
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 1.12rem;
+  line-height: 1.6;
+}
+
+.cta-content .cta-button {
+  margin-top: 1rem;
 }
 
 .cta-content h2 {
@@ -449,7 +647,7 @@ h4 {
 .eyebrow {
   margin: 0 0 0.85rem;
   color: var(--green-700);
-  font-size: 0.78rem;
+  font-size: var(--eyebrow-size);
   font-weight: 900;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -466,7 +664,7 @@ h4 {
 }
 
 .features-heading {
-  max-width: 52rem;
+  max-width: var(--container-text);
   margin-bottom: 1.2rem;
 }
 
@@ -495,7 +693,7 @@ h4 {
   grid-template-columns: minmax(18rem, 0.78fr) minmax(24rem, 1.22fr);
   gap: clamp(1rem, 3vw, 2.5rem);
   align-items: center;
-  width: min(100%, 64rem);
+  width: min(100%, var(--container));
   margin-bottom: clamp(4rem, 8vw, 8rem);
 }
 
@@ -564,8 +762,16 @@ h4 {
 }
 
 .interface-card {
+  /* Grid items default to min-width:auto, so the table inside card 03 forced
+     this panel to 580px inside a 343px column and overflow:hidden on the
+     section clipped 213px of it. */
+  min-width: 0;
   padding: clamp(1rem, 2.5vw, 1.5rem);
   border-radius: 1.45rem;
+}
+
+.feature-copy {
+  min-width: 0;
 }
 
 .panel-header {
@@ -741,7 +947,14 @@ textarea {
   border-radius: 0.9rem;
   background: #fafcf9;
   color: var(--ink);
-  outline: none;
+}
+
+/* This pair used to be "outline: none" with nothing replacing it. */
+input:focus-visible,
+textarea:focus-visible {
+  border-color: var(--green-500);
+  outline: 3px solid var(--green-500);
+  outline-offset: 2px;
 }
 
 input {
@@ -799,6 +1012,9 @@ table {
 
 .group-table-scroll {
   max-height: 16.5rem;
+  /* min-width:0 lets this shrink inside its grid track; without it the
+     table's min-width propagated up and blew the card past the viewport. */
+  min-width: 0;
   overflow: auto;
   border: 1px solid var(--line);
   border-radius: 1rem;
@@ -881,6 +1097,7 @@ th {
 }
 
 .compose-tabs button {
+  min-height: 2.75rem;
   padding: 0.65rem 0.9rem;
   border: 1px solid rgba(15, 122, 69, 0.14);
   background: rgba(35, 184, 95, 0.1);
@@ -903,7 +1120,7 @@ th {
 }
 
 .section-copy {
-  max-width: 38rem;
+  max-width: var(--container-narrow);
 }
 
 .how-list {
@@ -950,9 +1167,105 @@ th {
 .ghost-button:hover,
 .panel-button:hover,
 .table-interface button:hover,
-.compose-tabs button:hover,
-.one-click-console button:hover {
+.compose-tabs button:hover {
   transform: translateY(-2px);
+}
+
+/* Table row buttons were 35px tall. */
+.table-interface button:not(.panel-button) {
+  min-height: 2.75rem;
+}
+
+.site-footer {
+  padding: var(--section-gap) var(--gutter) 2.5rem;
+  background: var(--green-950);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.footer-inner,
+.footer-base {
+  width: min(100%, var(--container));
+  margin-inline: auto;
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.footer-brand p {
+  margin: 1rem 0 0;
+  max-width: 26rem;
+  line-height: 1.65;
+}
+
+.footer-nav {
+  display: grid;
+  align-content: start;
+  gap: 0.2rem;
+}
+
+.footer-nav h2 {
+  margin-bottom: 0.6rem;
+  color: #fff;
+  font-size: var(--eyebrow-size);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.footer-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.25rem 0;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.footer-nav a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer-base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Marks the feature panels as a simulation so a visitor does not read them
+   as a live connection to their account. */
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(15, 122, 69, 0.22);
+  border-radius: 999px;
+  background: rgba(35, 184, 95, 0.1);
+  color: var(--green-800);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.demo-badge::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--green-500);
 }
 
 @media (max-width: 1160px) {
@@ -1017,11 +1330,28 @@ th {
   }
 
   .hero-section {
-    min-height: 48rem;
+    padding-top: 11rem;
   }
 
+  /* 24vw made "whatsapp" 405px wide inside a 390px viewport, so it was
+     clipped by the hero's overflow:hidden. 15vw fits with room to spare. */
   h1 {
-    font-size: clamp(5rem, 24vw, 9rem);
+    font-size: clamp(3rem, 15vw, 5rem);
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+  }
+
+  .hero-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primary-button,
+  .ghost-button {
+    justify-content: center;
   }
 
   .dashboard-underlay {
@@ -1044,5 +1374,48 @@ th {
   table {
     display: block;
     overflow-x: auto;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The spotlight reveal is hover-only, so on touch it left an opaque curtain
+   over a dashboard nobody could uncover. Show the dashboard behind a fixed
+   scrim instead. */
+@media (hover: none) {
+  .hero-curtain {
+    -webkit-mask-image: none;
+    mask-image: none;
+    background: linear-gradient(180deg,
+        rgba(3, 31, 21, 0.52) 0%,
+        rgba(3, 31, 21, 0.84) 55%,
+        rgba(3, 31, 21, 0.94) 100%);
+  }
+
+  .hero-section:hover .hero-curtain {
+    --spot: 0px;
+  }
+
+  /* No hover to lift it, so settle on the mid-point straight away. */
+  .dashboard-underlay,
+  .hero-section:hover .dashboard-underlay {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-curtain,
+  .dashboard-underlay {
+    transition: none;
+  }
+
+  .hero-scroll-cue svg {
+    animation: none;
   }
 }
