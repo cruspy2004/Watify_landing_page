@@ -1,21 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Watify | WhatsApp for admins</title>
+  <meta name="description"
+    content="Watify turns WhatsApp into an admin dashboard. Connect your number once, then build groups from a CSV, broadcast to thousands, and track every delivery from one panel." />
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+
+  <!-- TODO: point og:url and og:image at the landing page's own domain once it
+       is deployed, and replace og:image with a purpose-made 1200x630 card.
+       watify-main-img.png is 696x247, so previews will letterbox. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Watify" />
+  <meta property="og:title" content="Watify | WhatsApp for admins" />
+  <meta property="og:description"
+    content="Connect your number once, then build groups from a CSV, broadcast to thousands, and track every delivery from one admin panel." />
+  <meta property="og:url" content="https://watify.vercel.app/" />
+  <meta property="og:image" content="https://watify.vercel.app/assets/watify-main-img.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Watify | WhatsApp for admins" />
+  <meta name="twitter:description"
+    content="Connect your number once, then build groups from a CSV, broadcast to thousands, and track every delivery from one admin panel." />
+  <meta name="twitter:image" content="https://watify.vercel.app/assets/watify-main-img.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&display=swap" />
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <header class="site-header">
     <a class="brand" href="#top" aria-label="Watify home">
-      <span class="brand-mark">W</span>
-      <span>Watify</span>
+      <img src="assets/watify-main-img.png" alt="Watify" class="brand-logo" width="696" height="247" />
     </a>
     <nav class="nav-links" aria-label="Primary navigation">
       <a href="#features">Features</a>
       <a href="#how">How to use</a>
-      <a href="#action">One click</a>
+      <a href="#cta">Try it</a>
     </nav>
     <a class="header-cta" href="#features">Explore</a>
   </header>
@@ -25,7 +50,9 @@
       <div class="dashboard-underlay" aria-hidden="true">
         <aside class="mock-sidebar">
           <div class="mock-logo"><span>W</span><strong>WATIFY</strong></div>
-          <div class="mock-user"><span>A</span><div><strong>Admin Panel</strong><small>business access</small></div></div>
+          <div class="mock-user"><span>A</span>
+            <div><strong>Admin Panel</strong><small>business access</small></div>
+          </div>
           <ul>
             <li class="active">Dashboard</li>
             <li>WhatsApp Setup</li>
@@ -59,55 +86,82 @@
         </section>
       </div>
 
-      <div class="hero-curtain">
+      <div class="hero-curtain" aria-hidden="true"></div>
+
+      <div class="hero-copy">
+        <p class="hero-eyebrow">Run WhatsApp from a dashboard, not a phone</p>
         <h1 id="hero-title">whatsapp for admins</h1>
+        <p class="hero-sub">
+          Connect your number once &mdash; then build groups from a CSV, broadcast to
+          thousands, and track every delivery from one admin panel.
+        </p>
+        <div class="hero-actions">
+          <a class="primary-button" href="https://watify.vercel.app/">Launch Watify</a>
+          <a class="ghost-button" href="#features">See it work</a>
+        </div>
       </div>
+
+      <a class="hero-scroll-cue" href="#features">
+        <span>Scroll</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path d="M12 4v14m0 0 6-6m-6 6-6-6" fill="none" stroke="currentColor" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
     </section>
-<!--
-    <section class="one-click-section" id="action" aria-labelledby="one-click-title">
-      <p class="eyebrow">Watify changes the surface</p>
-      <h2 id="one-click-title">Any action you want in one click.</h2>
-      <div class="one-click-console">
-        <button type="button" data-quick-action="connect">Verify WhatsApp</button>
-        <button type="button" data-quick-action="group">Create Group</button>
-        <button type="button" data-quick-action="send">Send Message</button>
-        <button type="button" data-quick-action="track">Track Result</button>
+
+    <section class="problem-statement" aria-labelledby="problem-title">
+      <p class="eyebrow">The problem</p>
+      <h2 id="problem-title">
+        Too dependent on WhatsApp for your business operations, but it feels redundant? Why not change the interface?
+      </h2>
+      <p class="problem-lead">
+        Groups built by hand, contacts copied one number at a time, broadcasts sent from somebody's personal
+        device, and no reliable record of what actually landed. Watify keeps WhatsApp as the channel and moves
+        the admin work somewhere you can see it.
+      </p>
+    </section>
+
+    <section class="how-section" id="how">
+      <div class="section-copy">
+        <p class="eyebrow">How to use Watify</p>
+        <h2>A simple admin path from setup to execution.</h2>
       </div>
-      <output id="quickActionOutput">Choose an action to see Watify respond.</output>
-    </section> -->
+      <ol class="how-list">
+        <li><strong>Log in</strong><span>Open the protected admin dashboard and access WhatsApp workflows.</span></li>
+        <li><strong>Connect WhatsApp</strong><span>Scan the QR code and verify the connected phone plus live session
+            health.</span></li>
+        <li><strong>Operate</strong><span>Create groups, list groups, send messages, and manage subscribers from the
+            dashboard.</span></li>
+        <li><strong>Track</strong><span>Use analytics to confirm activity, success rate, and subscriber growth.</span>
+        </li>
+      </ol>
+    </section>
 
     <section class="features-section" id="features" aria-labelledby="features-title">
       <div class="features-heading">
         <p class="eyebrow">Product workflows</p>
         <h2 id="features-title">One click for your daily whatsapp actions.</h2>
+        <p class="demo-badge">Interactive demo</p>
       </div>
-      <div class="workflow-hint" role="note">Press the buttons to understand</div>
+      <div class="workflow-hint" role="note">Press the green buttons to try each workflow</div>
 
       <svg class="feature-ribbon" viewBox="0 0 1000 1900" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <filter id="featureRibbonGlow" x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur stdDeviation="4" result="blur" />
-            <feColorMatrix
-              in="blur"
-              type="matrix"
-              values="0 0 0 0 0.05 0 0 0 0 0.73 0 0 0 0 0.33 0 0 0 0.75 0"
-              result="glow"
-            />
+            <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.05 0 0 0 0 0.73 0 0 0 0 0.33 0 0 0 0.75 0"
+              result="glow" />
             <feMerge>
               <feMergeNode in="glow" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
         </defs>
-          <path
-            class="feature-ribbon-base"
-          d="M835 105 C930 270 875 405 735 480 C610 548 170 535 96 740 C38 900 425 910 640 1018 C815 1138 780 1295 600 1372 C408 1454 178 1395 112 1570 C72 1705 390 1788 835 1810"
-        />
-        <path
-          id="featureRibbonPath"
-          class="feature-ribbon-active"
-          d="M835 105 C930 270 875 405 735 480 C610 548 170 535 96 740 C38 900 425 910 640 1018 C815 1138 780 1295 600 1372 C408 1454 178 1395 112 1570 C72 1705 390 1788 835 1810"
-        />
+        <path class="feature-ribbon-base"
+          d="M835 105 C930 270 875 405 735 480 C610 548 170 535 96 740 C38 900 425 910 640 1018 C815 1138 780 1295 600 1372 C408 1454 178 1395 112 1570 C72 1705 390 1788 835 1810" />
+        <path id="featureRibbonPath" class="feature-ribbon-active"
+          d="M835 105 C930 270 875 405 735 480 C610 548 170 535 96 740 C38 900 425 910 640 1018 C815 1138 780 1295 600 1372 C408 1454 178 1395 112 1570 C72 1705 390 1788 835 1810" />
         <circle id="featureRibbonPoint" class="feature-ribbon-point" r="8" cx="835" cy="105" />
       </svg>
 
@@ -127,7 +181,8 @@
               <img src="assets/watify-qr.svg" alt="Watify QR code" />
               <small>Scan to connect</small>
             </div>
-            <div class="phone-scan" id="phoneScanMock" role="button" tabindex="0" aria-label="Click to simulate QR scan" title="Click to connect" aria-live="polite">
+            <div class="phone-scan" id="phoneScanMock" role="button" tabindex="0" aria-label="Click to simulate QR scan"
+              title="Click to connect" aria-live="polite">
               <div class="phone-top"></div>
               <div class="phone-screen">
                 <span id="phoneScanStatus">Scan to connect</span>
@@ -147,7 +202,8 @@
         <div class="feature-copy">
           <span>02</span>
           <h3>Create a group with one tap.</h3>
-          <p>Upload a CSV, paste a list, or add numbers manually. Watify reads the contacts and builds the group without the phone chaos.</p>
+          <p>Upload a CSV, paste a list, or add numbers manually. Watify reads the contacts and builds the group without
+            the phone chaos.</p>
         </div>
         <div class="interface-card create-group-interface">
           <div class="breadcrumb">Dashboard / WhatsApp / Create Group</div>
@@ -180,6 +236,7 @@
         </div>
         <div class="interface-card table-interface">
           <div class="panel-toolbar">
+            <label class="sr-only" for="groupSearchInput">Search groups by name</label>
             <input id="groupSearchInput" type="search" placeholder="Search by group name..." />
             <button class="panel-button compact" type="button" data-demo-action="search">Search</button>
           </div>
@@ -250,13 +307,16 @@
         <div class="feature-copy">
           <span>04</span>
           <h3>Send messages faster.</h3>
-          <p>Pick the recipient type, write once, and send from a focused admin flow instead of repeating the same work in WhatsApp.</p>
+          <p>Pick the recipient type, write once, and send from a focused admin flow instead of repeating the same work
+            in WhatsApp.</p>
         </div>
         <div class="interface-card message-interface">
-          <div class="compose-tabs" role="tablist" aria-label="Message type">
-            <button class="active" type="button">Individual</button>
-            <button type="button">Group</button>
-            <button type="button">WhatsApp Group</button>
+          <!-- Not role="tablist": there are no tabpanels to switch between, so
+               this is a segmented control and aria-pressed carries the state. -->
+          <div class="compose-tabs" role="group" aria-label="Message type">
+            <button class="active" type="button" aria-pressed="true" data-compose-tab>Individual</button>
+            <button type="button" aria-pressed="false" data-compose-tab>Group</button>
+            <button type="button" aria-pressed="false" data-compose-tab>WhatsApp Group</button>
           </div>
           <label>
             Recipient
@@ -275,32 +335,47 @@
       </article>
     </section>
 
-    <section class="how-section" id="how">
-      <div class="section-copy">
-        <p class="eyebrow">How to use Watify</p>
-        <h2>A simple admin path from setup to execution.</h2>
-      </div>
-      <ol class="how-list">
-        <li><strong>Log in</strong><span>Open the protected admin dashboard and access WhatsApp workflows.</span></li>
-        <li><strong>Connect WhatsApp</strong><span>Scan the QR code and verify the connected phone plus live session health.</span></li>
-        <li><strong>Operate</strong><span>Create groups, list groups, send messages, and manage subscribers from the dashboard.</span></li>
-        <li><strong>Track</strong><span>Use analytics to confirm activity, success rate, and subscriber growth.</span></li>
-      </ol>
-    </section>
-
-    <section class="problem-section" aria-label="Problem statement">
-      <div class="problem-copy">
-        <p>
-          Too dependent on WhatsApp for your business operations, but it feels redundant?
-          Why not change the interface?
+    <section class="cta-section" id="cta" aria-labelledby="cta-title">
+      <div class="cta-content">
+        <h2 id="cta-title">Change the interface, not the channel.</h2>
+        <p class="cta-sub">
+          Connect your number, build your first group from a CSV, and send a tracked broadcast in minutes.
         </p>
+        <a class="cta-button" href="https://watify.vercel.app/">Launch Watify</a>
       </div>
-      <figure class="problem-visual">
-        <img src="assets/watify-bot-chat.png" alt="Watify assistant helping manage WhatsApp conversations" />
-      </figure>
     </section>
   </main>
 
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="assets/watify-main-img.png" alt="Watify" class="brand-logo" width="696" height="247" />
+        <p>
+          WhatsApp operations for admins &mdash; groups, broadcasts, subscribers, and delivery
+          tracking from a single dashboard.
+        </p>
+      </div>
+      <nav class="footer-nav" aria-label="Product links">
+        <h2>Product</h2>
+        <a href="#features">Features</a>
+        <a href="#how">How to use</a>
+        <a href="https://watify.vercel.app/">Launch app</a>
+      </nav>
+      <!-- TODO: these need real destinations before launch. -->
+      <nav class="footer-nav" aria-label="Company links">
+        <h2>Company</h2>
+        <a href="#">Contact</a>
+        <a href="#">Privacy policy</a>
+        <a href="#">Terms of service</a>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <small>&copy; 2026 Watify. All rights reserved.</small>
+      <small>Not affiliated with, endorsed by, or sponsored by WhatsApp or Meta.</small>
+    </div>
+  </footer>
+
   <script src="script.js"></script>
 </body>
+
 </html>
